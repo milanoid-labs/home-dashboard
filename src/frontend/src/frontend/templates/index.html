@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Home Dashboard{% endblock %}
+
+{% block content %}
+
+{% if error %}
+<div class="banner banner-error">{{ error }}</div>
+{% endif %}
+
+{% if not zones and not error %}
+<div class="banner">No zones to show.</div>
+{% endif %}
+
+{% for zone in zones %}
+<section class="zone">
+    <h2 class="zone-title">{{ zone.zone_name }}</h2>
+    <div class="card-grid">
+        {% for device in zone.devices %}
+            {% if device.type in shutter_types %}
+            <div class="card card-shutter">
+                <div class="card-name">{{ device.name }}</div>
+                <div class="card-value">{{ device.value }}</div>
+                <div class="shutter-controls">
+                    <form method="post" action="{{ url_for('control', zone_id=zone.zone_id, device_id=device.id, action='open') }}">
+                        <button type="submit" class="icon-btn" aria-label="Open">&#9650;</button>
+                    </form>
+                    <form method="post" action="{{ url_for('control', zone_id=zone.zone_id, device_id=device.id, action='stop') }}">
+                        <button type="submit" class="icon-btn icon-btn-stop" aria-label="Stop">&#9724;</button>
+                    </form>
+                    <form method="post" action="{{ url_for('control', zone_id=zone.zone_id, device_id=device.id, action='close') }}">
+                        <button type="submit" class="icon-btn" aria-label="Close">&#9660;</button>
+                    </form>
+                </div>
+            </div>
+            {% elif device.type in actuator_types %}
+            <form method="post" action="{{ url_for('control', zone_id=zone.zone_id, device_id=device.id, action='toggle') }}"
+                  class="card card-toggle {% if device.value == 'ON' %}is-on{% endif %}">
+                <button type="submit" class="toggle-btn">
+                    <span class="card-name">{{ device.name }}</span>
+                    <span class="toggle-state">{{ 'ON' if device.value == 'ON' else 'OFF' }}</span>
+                </button>
+            </form>
+            {% elif device.controllable %}
+            <div class="card">
+                <div class="card-name">{{ device.name }}</div>
+                <div class="card-value">{{ device.value }}</div>
+            </div>
+            {% else %}
+            <div class="card card-sensor">
+                <div class="card-name">{{ device.name }}</div>
+                <div class="card-value">{{ device.value }}{% if device.unit %} {{ device.unit }}{% endif %}</div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+{% endblock %}

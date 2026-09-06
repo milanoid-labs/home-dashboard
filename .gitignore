@@ -1,3 +1,29 @@
-.DS_Store
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+coverage.xml
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+
+# Editors
 .idea/
 .vscode/
+.DS_Store

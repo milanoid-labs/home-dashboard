@@ -1,0 +1,98 @@
+name: Backend Tests
+
+# NOTE: These jobs run on self-hosted runners (homelab-runners) for `pull_request`
+# events, which means PR code executes on our own infrastructure. Only merge PRs
+# from trusted contributors - untrusted PR code could exfiltrate runner secrets
+# or otherwise tamper with the runner host.
+on:
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - 'src/backend/**'
+      - '.github/workflows/backend-tests.yaml'
+
+jobs:
+  test:
+    name: Test Backend
+    runs-on: homelab-runners
+    defaults:
+      run:
+        working-directory: ./src/backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        env:
+          UV_INDEX_NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          UV_INDEX_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          uv sync --locked --dev
+
+      - name: Lint with Ruff
+        run: |
+          uv run ruff check --output-format=github --target-version=py313 src tests
+          uv run ruff format --diff --check --target-version=py313 src tests
+
+      - name: Run tests with coverage
+        run: |
+          uv run pytest tests/ -v --cov=src/backend --cov-report=xml --cov-fail-under=80
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-report
+          path: ./src/backend/coverage.xml
+          retention-days: 7
+        if: ${{ always() }}
+
+      - name: Coverage Report
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
+        with:
+          filename: ./src/backend/coverage.xml
+          badge: true
+          format: markdown
+          output: both
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        if: github.event_name == 'pull_request'
+        with:
+          header: test-coverage
+          recreate: true
+          path: code-coverage-results.md
+  build:
+    name: Build & Trivy
+    needs: test
+    runs-on: homelab-runners
+    defaults:
+      run:
+        working-directory: ./src/backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build an image from Dockerfile
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          docker build \
+            --secret id=nexus_username,env=NEXUS_USERNAME \
+            --secret id=nexus_password,env=NEXUS_PASSWORD \
+            -t docker.io/milanoid-labs/home-dashboard-backend:${{ github.sha }} -f Dockerfile.secured .
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: 'docker.io/milanoid-labs/home-dashboard-backend:${{ github.sha }}'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
