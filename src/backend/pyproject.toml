@@ -1,6 +1,6 @@
 [project]
 name = "home-dashboard-backend"
-version = "0.1.0"
+version = "0.2.0"
 description = "Backend API for controlling my Eaton xComfort smart home controller"
 readme = "README.md"
 authors = [
