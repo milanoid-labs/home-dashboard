@@ -1,9 +1,8 @@
 import requests
 import responses
+from conftest import TEST_API_URL as API_URL
 
 from frontend.main import EXCLUDED_ZONES
-
-API_URL = "http://localhost:8001"
 
 ZONES = [
     {
@@ -70,11 +69,14 @@ def test_index_renders_devices(client):
 
 @responses.activate
 def test_index_excludes_servis_zone(client):
+    assert "servis" in EXCLUDED_ZONES  # sanity-check the fixture's premise
     responses.add(responses.GET, f"{API_URL}/zones", json=ZONES, status=200)
     resp = client.get("/")
     body = resp.get_data(as_text=True)
+    # The only device in the excluded zone must not be rendered, and the
+    # zone's own name must not appear anywhere (it has no other content).
     assert "pozarni cidlo" not in body
-    assert "servis" not in EXCLUDED_ZONES or "hz_6" not in body
+    assert "servis" not in body
 
 
 @responses.activate

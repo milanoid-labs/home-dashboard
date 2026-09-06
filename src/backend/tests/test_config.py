@@ -17,7 +17,7 @@ def test_defaults():
     assert config.CORS_ALLOW_ORIGINS == ["*"]
     assert config.CORS_ALLOW_METHODS == ["*"]
     assert config.CORS_ALLOW_HEADERS == ["*"]
-    assert config.CORS_ALLOW_CREDENTIALS is True
+    assert config.CORS_ALLOW_CREDENTIALS is False
 
 
 @mock.patch.dict(
