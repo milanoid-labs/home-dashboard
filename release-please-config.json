@@ -1,0 +1,32 @@
+{
+  "packages": {
+    "src/backend": {
+      "release-type": "python",
+      "package-name": "home-dashboard-backend",
+      "component": "backend",
+      "include-component-in-tag": true,
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "uv.lock",
+          "jsonpath": "$.package[?(@.name.value=='home-dashboard-backend')].version"
+        }
+      ]
+    },
+    "src/frontend": {
+      "release-type": "python",
+      "package-name": "home-dashboard-frontend",
+      "component": "frontend",
+      "include-component-in-tag": true,
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "uv.lock",
+          "jsonpath": "$.package[?(@.name.value=='home-dashboard-frontend')].version"
+        }
+      ]
+    }
+  }
+}

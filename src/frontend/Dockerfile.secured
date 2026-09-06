@@ -1,0 +1,43 @@
+FROM python:3.14-alpine@sha256:a1321512d6a287428c50dcdf2ab3857761127e03a23b1f648e9c1c0de59288f8 AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.12.2@sha256:069a51314a7bb6031777a9273205fe1b0b19e914ef418207d1338b268df641dd /uv /uvx /bin/
+
+# Change the working directory to the `app` directory
+WORKDIR /app
+
+# Install dependencies in a cache layer. This speeds up build time
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=secret,id=nexus_username \
+  --mount=type=secret,id=nexus_password \
+  --mount=type=bind,source=uv.lock,target=uv.lock \
+  --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+  UV_INDEX_NEXUS_USERNAME="$(cat /run/secrets/nexus_username)" \
+  UV_INDEX_NEXUS_PASSWORD="$(cat /run/secrets/nexus_password)" \
+  uv sync --locked --no-install-project --no-editable
+
+# Copy the project into the intermediate image
+COPY . /app
+
+# Sync the project and install it, now that we have access to the source code
+RUN --mount=type=cache,target=/root/.cache/uv \
+  --mount=type=secret,id=nexus_username \
+  --mount=type=secret,id=nexus_password \
+  UV_INDEX_NEXUS_USERNAME="$(cat /run/secrets/nexus_username)" \
+  UV_INDEX_NEXUS_PASSWORD="$(cat /run/secrets/nexus_password)" \
+  uv sync --locked --no-editable --no-dev
+
+FROM python:3.14-alpine@sha256:a1321512d6a287428c50dcdf2ab3857761127e03a23b1f648e9c1c0de59288f8
+
+# Create a non-root user and group with specific IDs
+RUN addgroup -S -g 1000 app && adduser -S -u 1000 -G app app
+
+# Copy the environment from builder
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
+
+# Switch to the non-root user
+USER app
+
+# Expose the correct port
+EXPOSE 8080
+
+# Run the application using the compiled app command
+CMD ["/app/.venv/bin/home-dashboard-web"]
