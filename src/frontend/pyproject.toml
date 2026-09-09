@@ -1,6 +1,6 @@
 [project]
 name = "home-dashboard-frontend"
-version = "0.2.0"
+version = "0.2.1"
 description = "Mobile-friendly dashboard frontend for my Eaton xComfort smart home controller"
 readme = "README.md"
 authors = [
