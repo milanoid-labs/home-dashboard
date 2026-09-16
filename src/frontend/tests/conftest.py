@@ -1,5 +1,4 @@
 import pytest
-
 from frontend.main import app as flask_app
 
 # Tests stub HTTP calls against this fixed URL (see API_URL in

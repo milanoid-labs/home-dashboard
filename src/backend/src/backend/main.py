@@ -3,8 +3,7 @@ import logging
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_client import start_http_server, Summary
-
+from prometheus_client import Summary, start_http_server
 
 from .config import (
     API_HOST,
@@ -23,9 +22,8 @@ from .config import (
 from .models import ControlRequest, ControlResult, Zone
 from .shc_client import SHCClient, SHCError
 
-
 # Create a metric to track time spent and requests made.
-REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
+REQUEST_TIME = Summary("request_processing_seconds", "Time spent processing request")
 
 
 logging.basicConfig(
@@ -61,6 +59,7 @@ def get_client() -> SHCClient:
             SHC_URL, SHC_USERNAME, SHC_PASSWORD, session_ttl=SHC_SESSION_TTL
         )
     return _client
+
 
 @REQUEST_TIME.time()
 @app.get("/")
