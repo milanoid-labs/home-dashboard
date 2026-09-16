@@ -72,17 +72,19 @@ async def root():
 @app.get("/health")
 async def health():
     """Health endpoint for kubernetes probes - does not call the SHC"""
-    return {"status": "healthy"}
+    with REQUEST_TIME.time():
+        return {"status": "healthy"}
 
 
 @app.get("/zones", response_model=list[Zone])
 async def read_zones(client: SHCClient = Depends(get_client)):
     """Every zone and its devices, with live values"""
-    try:
-        return client.get_all_zones()
-    except SHCError as e:
-        logger.error(f"Error fetching zones: {e}")
-        raise HTTPException(status_code=502, detail=str(e))
+    with REQUEST_TIME.time():
+        try:
+            return client.get_all_zones()
+        except SHCError as e:
+            logger.error(f"Error fetching zones: {e}")
+            raise HTTPException(status_code=502, detail=str(e))
 
 
 @app.post("/zones/{zone_id}/devices/{device_id}/control", response_model=ControlResult)
@@ -93,12 +95,13 @@ async def control_device(
     client: SHCClient = Depends(get_client),
 ):
     """Send a control command to one device"""
-    try:
-        ok = client.control_device(zone_id, device_id, request.state)
-        return ControlResult(ok=ok)
-    except SHCError as e:
-        logger.error(f"Error controlling {device_id}: {e}")
-        raise HTTPException(status_code=502, detail=str(e))
+    with REQUEST_TIME.time():
+        try:
+            ok = client.control_device(zone_id, device_id, request.state)
+            return ControlResult(ok=ok)
+        except SHCError as e:
+            logger.error(f"Error controlling {device_id}: {e}")
+            raise HTTPException(status_code=502, detail=str(e))
 
 
 def main():
