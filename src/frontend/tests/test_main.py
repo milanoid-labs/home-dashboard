@@ -1,6 +1,7 @@
 import requests
 import responses
 from conftest import TEST_API_URL as API_URL
+
 from frontend.main import EXCLUDED_ZONES
 
 ZONES = [
