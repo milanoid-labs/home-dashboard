@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.3.0...backend-v0.4.0) (2026-09-16)
+
+
+### Features
+
+* metrics to all endpoints ([#16](https://github.com/milanoid-labs/home-dashboard/issues/16)) ([445614a](https://github.com/milanoid-labs/home-dashboard/commit/445614ae565c5f827aac2089716e722506b40bc7))
+
 ## [0.3.0](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.2.0...backend-v0.3.0) (2026-09-16)
 
 
