@@ -14,6 +14,7 @@ from .config import (
     CORS_ALLOW_HEADERS,
     CORS_ALLOW_METHODS,
     CORS_ALLOW_ORIGINS,
+    METRICS_PORT,
     SHC_PASSWORD,
     SHC_SESSION_TTL,
     SHC_URL,
@@ -61,11 +62,11 @@ def get_client() -> SHCClient:
     return _client
 
 
-@REQUEST_TIME.time()
 @app.get("/")
 async def root():
     """Root endpoint returning API information"""
-    return {"message": f"{APP_NAME} API"}
+    with REQUEST_TIME.time():
+        return {"message": f"{APP_NAME} API"}
 
 
 @app.get("/health")
@@ -103,7 +104,7 @@ async def control_device(
 def main():
     """Entry point for running the API server"""
     logger.info(f"Starting {APP_NAME} API")
-    start_http_server(8000)
+    start_http_server(METRICS_PORT)
     uvicorn.run("backend.main:app", host=API_HOST, port=API_PORT, reload=API_RELOAD)
 
 
