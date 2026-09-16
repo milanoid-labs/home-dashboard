@@ -21,6 +21,9 @@ API_HOST = os.getenv("API_HOST", "0.0.0.0")
 API_PORT = int(os.getenv("API_PORT", "8001"))
 API_RELOAD = _parse_bool(os.getenv("API_RELOAD", "false"))
 
+# Prometheus metrics server
+METRICS_PORT = int(os.getenv("METRICS_PORT", "8000"))
+
 # Eaton xComfort Smart Home Controller connection.
 # SHC_PASSWORD defaults to empty on purpose - a real value must come from
 # a k8s Secret / env var at deploy time, never committed to this (public)
