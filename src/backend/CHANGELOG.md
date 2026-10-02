@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.6](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.5...backend-v0.4.6) (2026-10-02)
+
+
+### Bug Fixes
+
+* **deps:** update ghcr.io/astral-sh/uv docker tag to v0.12.22 ([#38](https://github.com/milanoid-labs/home-dashboard/issues/38)) ([05031f1](https://github.com/milanoid-labs/home-dashboard/commit/05031f18f86089b2a1604a1bc25d0b8a10ffc782))
+* **deps:** update python:3.14-alpine docker digest to 2e740b2 ([#37](https://github.com/milanoid-labs/home-dashboard/issues/37)) ([7c24b11](https://github.com/milanoid-labs/home-dashboard/commit/7c24b111d23e9a6eb937fb66d22694df79e2f6ef))
+
 ## [0.4.5](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.4...backend-v0.4.5) (2026-09-30)
 
 
