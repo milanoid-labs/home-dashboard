@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.11](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.10...backend-v0.4.11) (2026-10-14)
+
+
+### Bug Fixes
+
+* **deps:** update ghcr.io/astral-sh/uv docker tag to v0.13.1 ([#55](https://github.com/milanoid-labs/home-dashboard/issues/55)) ([5be4882](https://github.com/milanoid-labs/home-dashboard/commit/5be4882629af11d6dfc39831fd98cfb2a041eefe))
+
 ## [0.4.10](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.9...backend-v0.4.10) (2026-10-10)
 
 
