@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.20](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.19...backend-v0.4.20) (2026-11-06)
+
+
+### Bug Fixes
+
+* **deps:** update python:3.14-alpine docker digest to a18b20a ([#79](https://github.com/milanoid-labs/home-dashboard/issues/79)) ([5748ef1](https://github.com/milanoid-labs/home-dashboard/commit/5748ef1e874c28b34357b1c74bedcd33ccf9b1ee))
+
 ## [0.4.19](https://github.com/milanoid-labs/home-dashboard/compare/backend-v0.4.18...backend-v0.4.19) (2026-11-03)
 
 
