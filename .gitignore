@@ -18,7 +18,6 @@ htmlcov/
 
 # Environments
 .env
-.envrc
 .venv
 env/
 venv/
