@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.25](https://github.com/milanoid-labs/home-dashboard/compare/frontend-v0.2.24...frontend-v0.2.25) (2026-11-12)
+
+
+### Bug Fixes
+
+* **deps:** update python:3.14-alpine docker digest to 5862d97 ([#83](https://github.com/milanoid-labs/home-dashboard/issues/83)) ([99332f1](https://github.com/milanoid-labs/home-dashboard/commit/99332f1f7561e0ad1b5045fed8460fb172a1727b))
+
 ## [0.2.24](https://github.com/milanoid-labs/home-dashboard/compare/frontend-v0.2.23...frontend-v0.2.24) (2026-11-06)
 
 
